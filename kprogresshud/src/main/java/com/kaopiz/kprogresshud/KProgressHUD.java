@@ -49,6 +49,7 @@ public class KProgressHUD {
 
     private int mMaxProgress;
     private boolean mIsAutoDismiss;
+    private boolean mIsFullscreen;
 
     private int mGraceTimeMs;
     private Handler mGraceTimer;
@@ -63,6 +64,7 @@ public class KProgressHUD {
         mAnimateSpeed = 1;
         mCornerRadius = 10;
         mIsAutoDismiss = true;
+        mIsFullscreen = false;
         mGraceTimeMs = 0;
         mFinished = false;
 
@@ -286,6 +288,11 @@ public class KProgressHUD {
         return this;
     }
 
+    public KProgressHUD setFullscreen(boolean isFullscreen) {
+        mIsFullscreen = isFullscreen;
+        return this;
+    }
+
     /**
      * Grace period is the time (in milliseconds) that the invoked method may be run without
      * showing the HUD. If the task finishes before the grace time runs out, the HUD will
@@ -352,6 +359,24 @@ public class KProgressHUD {
 		
         public ProgressDialog(Context context) {
             super(context);
+        }
+
+        @Override
+        public void show() {
+            if (mIsFullscreen && this.getWindow() != null) {
+                this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            }
+            super.show();
+            if (mIsFullscreen && this.getWindow() != null) {
+                int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN;
+                this.getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+                this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            }
         }
 
         @Override

@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.indeterminate:
                 hud = KProgressHUD.create(this)
-                        .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE);
+                        .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                        .setFullscreen(true);
                 scheduleDismiss();
                 break;
             case R.id.label_indeterminate:
